@@ -19,18 +19,32 @@
     <nav class="tabs is-boxed is-fullwidth">
       <div class="container">
         <ul>
-          <li class="is-active">
-            <a>Representatives</a>
+          <li class="{{#ifEquals tab 'representatives'}}is-active{{/ifEquals}}">
+            <a href="/representatives">Representatives</a>
           </li>
-          <li>
-            <a>Bills</a>
+          <li class="{{#ifEquals tab 'bills'}}is-active{{/ifEquals}}">
+            <a href="/bills">Bills</a>
           </li>
-          <li>
-            <a>Committees</a>
+          <li class="{{#ifEquals tab 'committees'}}is-active{{/ifEquals}}">
+            <a href="/committees">Committees</a>
           </li>
         </ul>
       </div>
   </div>
 </section>
+
+<section class="section">
+  <div class="container">
+    {{#ifEquals tab 'representatives'}}
+    {{> representatives_table}}
+    {{/ifEquals}}
+    {{#ifEquals tab 'bills'}}
+    {{> bills_table}}
+    {{/ifEquals}}
+    {{#ifEquals tab 'committees'}}
+    {{> committees_table}}
+    {{/ifEquals}}
+  </div>
+ </section>
 
 </body>

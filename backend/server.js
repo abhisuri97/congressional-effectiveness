@@ -26,6 +26,9 @@ app.set('secret', config.secret);
 app.set('views', path.join(__dirname, '/../views'));
 app.set('view engine', 'hbs');
 hbs.registerPartials(__dirname + '/../views/partials');
+hbs.registerHelper('ifEquals', function(arg1, arg2, options) {
+    return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
+});
 
 // routes
 app.use('/public',express.static(path.join(__dirname, '../public')))

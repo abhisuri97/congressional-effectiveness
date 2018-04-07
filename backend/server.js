@@ -11,15 +11,15 @@ mongoose.connect(config.database)
     process.exit()
   })
 // promisify all mongoose functions
-mongoose.Promise = global.Promise 
+mongoose.Promise = global.Promise
 
 const app = express()
 app.set('secret', config.secret);
 
 // bodyparser middleware JIC
 
-app.get('/', function() {
-  res.send('hello world')
+app.get('/', function(req, res, next) {
+  res.send('Hello World!')
 })
 
 app.set('port', process.env.PORT || 3000);

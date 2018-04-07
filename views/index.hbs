@@ -1,0 +1,69 @@
+<body>
+
+<section class="hero is-info is-bold">
+  <div class="hero-head">
+    <nav class="navbar is-transparent">
+      <div class="navbar-menu">
+        <div class="navbar-end">
+          <div class="navbar-item">
+            <div class="field is-grouped">
+              <p class="control">
+                <a class="button is-link is-inverted" href="/login">
+                  Login
+                </a>
+              </p>
+              <p class="control">
+                <a class="button is-link is-inverted" href="/signup">
+                  Sign up
+                </a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </div>
+  <div class="hero-body">
+    <div class="container">
+      <h1 class="title">
+        Congressional Effectiveness
+      </h1>
+      <p class="subtitle">
+        A CIS 450 final project that explores how effective our Congress is.
+      </p>
+    </div>
+  </div>
+  <div class="hero-foot">
+    <div class="hero-foot">
+    <nav class="tabs is-boxed is-fullwidth">
+      <div class="container">
+        <ul>
+          <li class="{{#ifEquals tab 'representatives'}}is-active{{/ifEquals}}">
+            <a href="/representatives">Representatives</a>
+          </li>
+          <li class="{{#ifEquals tab 'bills'}}is-active{{/ifEquals}}">
+            <a href="/bills">Bills</a>
+          </li>
+          <li class="{{#ifEquals tab 'committees'}}is-active{{/ifEquals}}">
+            <a href="/committees">Committees</a>
+          </li>
+        </ul>
+      </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    {{#ifEquals tab 'representatives'}}
+    {{> representatives_table}}
+    {{/ifEquals}}
+    {{#ifEquals tab 'bills'}}
+    {{> bills_table}}
+    {{/ifEquals}}
+    {{#ifEquals tab 'committees'}}
+    {{> committees_table}}
+    {{/ifEquals}}
+  </div>
+ </section>
+
+</body>

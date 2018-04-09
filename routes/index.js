@@ -12,6 +12,13 @@ router.get('/representatives', function(req, res, next) {
   })
 })
 
+router.get('/representatives/:member_id', function(req, res, next) {
+  res.render('index', {
+    tab: 'representatives',
+    member_id: req.params['member_id']
+  })
+})
+
 router.get('/bills', function(req, res, next) {
   res.render('index', {
     tab: 'bills'

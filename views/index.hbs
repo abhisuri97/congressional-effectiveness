@@ -55,7 +55,11 @@
 <section class="section">
   <div class="container">
     {{#ifEquals tab 'representatives'}}
-    {{> representatives_table}}
+      {{#if member_id}}
+        {{> representative_profile}}
+      {{else}}
+        {{> representatives_table}}
+      {{/if}}
     {{/ifEquals}}
     {{#ifEquals tab 'bills'}}
     {{> bills_table}}

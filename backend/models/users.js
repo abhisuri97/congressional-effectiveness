@@ -5,14 +5,16 @@ const userSchema = new Schema({
   username: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
+    trim: true
   },
   token: {
     type: String
   }
   password: {
     type: String,
-    required: true
+    required: true,
+    trim: true
   },
   following: [{
     type: Schema.ObjectId

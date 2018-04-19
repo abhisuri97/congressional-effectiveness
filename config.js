@@ -3,12 +3,15 @@ module.exports =  {
     'db': 'cis450_project',
     'username': 'cis450project',
     'password': 'password',
-    'host': 'localhost'
+    'host': 'localhost',
+    'logging': false,
   },
   'production': {
-    'db': '',
-    'username': '',
-    'password':  ''
+    'db': 'cis450_project',
+    'username': 'cis450',
+    'password':  'cis450550',
+    'host': 'cis450test.cnlmnmamuogs.us-east-1.rds.amazonaws.com',
+    'logging': true
   },
-  'type': 'development'
+  'type': 'production'
 }

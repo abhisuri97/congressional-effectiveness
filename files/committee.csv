@@ -1,0 +1,48 @@
+name,committee_id,chamber
+House Permanent Select Committee on Intelligence,HLIG,
+House Committee on Agriculture,HSAG,House
+House Committee on Appropriations,HSAP,House
+House Committee on Armed Services,HSAS,House
+House Committee on Financial Services,HSBA,House
+House Committee on the Budget,HSBU,House
+House Committee on Education and the Workforce,HSED,House
+House Committee on Foreign Affairs,HSFA,House
+House Committee on Oversight and Government Reform,HSGO,House
+House Committee on House Administration,HSHA,House
+House Committee on Homeland Security,HSHM,House
+House Committee on Energy and Commerce,HSIF,House
+House Committee on Natural Resources,HSII,House
+House Committee on the Judiciary,HSJU,House
+House Committee on Transportation and Infrastructure,HSPW,House
+House Committee on Rules,HSRU,House
+House Committee on Small Business,HSSM,House
+House Committee on Ethics,HSSO,House
+"House Committee on Science, Space, and Technology",HSSY,House
+House Committee on Veterans' Affairs,HSVR,House
+House Committee on Ways and Means,HSWM,House
+Commission on Security and Cooperation in Europe,JCSE,
+Joint Economic Committee,JSEC,
+Joint Committee on the Library,JSLC,
+Joint Committee on Printing,JSPR,
+Joint Committee on Taxation,JSTX,
+United States Senate Caucus on International Narcotics Control,SCNC,Senate
+Senate Select Committee on Ethics,SLET,Senate
+Senate Committee on Indian Affairs,SLIA,Senate
+Senate Select Committee on Intelligence,SLIN,Senate
+Senate Special Committee on Aging,SPAG,Senate
+"Senate Committee on Agriculture, Nutrition, and Forestry",SSAF,Senate
+Senate Committee on Appropriations,SSAP,Senate
+Senate Committee on Armed Services,SSAS,Senate
+"Senate Committee on Banking, Housing, and Urban Affairs",SSBK,Senate
+Senate Committee on the Budget,SSBU,Senate
+"Senate Committee on Commerce, Science, and Transportation",SSCM,Senate
+Senate Committee on Energy and Natural Resources,SSEG,Senate
+Senate Committee on Environment and Public Works,SSEV,Senate
+Senate Committee on Finance,SSFI,Senate
+Senate Committee on Foreign Relations,SSFR,Senate
+Senate Committee on Homeland Security and Governmental Affairs,SSGA,Senate
+"Senate Committee on Health, Education, Labor, and Pensions",SSHR,Senate
+Senate Committee on the Judiciary,SSJU,Senate
+Senate Committee on Rules and Administration,SSRA,Senate
+Senate Committee on Small Business and Entrepreneurship,SSSB,Senate
+Senate Committee on Veterans' Affairs,SSVA,Senate

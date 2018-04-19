@@ -11,7 +11,8 @@ const sequelize = new Sequelize(type.db, type.username, type.password, {
     acquire: 30000,
     idle: 10000
   },
-  operatorsAliases: false
+  operatorsAliases: false,
+  logging: type.logging
 });
 
 var Representative = sequelize.define('Representative', {
@@ -20,7 +21,17 @@ var Representative = sequelize.define('Representative', {
   last_name: { type: Sequelize.STRING },
   middle_name: { type: Sequelize.STRING },
   state: { type: Sequelize.STRING },
-  party: { type: Sequelize.STRING }
+  party: { type: Sequelize.STRING },
+  last_term_start: { type: Sequelize.STRING },
+  last_term_end: { type: Sequelize.STRING },
+  last_url: { type: Sequelize.TEXT  },
+  image: { type: Sequelize.TEXT }
+}, {
+  hooks: {
+    beforeValidate : (rep, options) => {
+      rep.image = `https://theunitedstates.io/images/congress/original/${rep.member_id}.jpg`
+    }
+  }
 })
 
 var Congress = sequelize.define('Congress', {
@@ -71,12 +82,13 @@ var Chair_of_committee = sequelize.define('Chair_of_Committee', {
 })
 
 Representative.belongsToMany(Committee, { through: Chair_of_committee, foreignKey: 'chair_id', as: 'Chair' })
-Committee.belongsToMany(Representative, { through: Chair_of_committee, foreignKey: 'committee_id', as: 'Commitee' })
+Committee.belongsToMany(Representative, { through: Chair_of_committee, foreignKey: 'committee_id', as: 'CommiteeRep' })
 
 var Bill = sequelize.define('Bill', {
-  bill_id: { type: Sequelize.STRING, primaryKey: true },
+  bill_id: { type: Sequelize.STRING },
+  bill_unique_id: { type: Sequelize.STRING, primaryKey: true },
   bill_type: {type:  Sequelize.STRING },
-  title: { type: Sequelize.STRING },
+  title: { type: Sequelize.TEXT },
   sponsor_id: { type: Sequelize.STRING },
   congress: { type: Sequelize.STRING },
   chamber: {type:  Sequelize.STRING },
@@ -86,6 +98,12 @@ var Bill = sequelize.define('Bill', {
   enacted: { type: Sequelize.STRING },
   cosponsors_by_party: { type: Sequelize.STRING },
   cosponsor: {type:  Sequelize.STRING },
+}, { 
+  hooks: {
+    beforeValidate: (bill, options) => {
+      bill.bill_unique_id = '' + bill.bill_id + '_' + bill.chamber;
+    }
+  }
 })
 
 Representative.hasMany(Bill, {foreignKey: 'sponsor_id', sourceKey: 'member_id', as: 'Bills' })
@@ -96,6 +114,9 @@ module.exports = {
   Congress: Congress,
   Voting: Voting,
   Members_of_congress: Members_of_congress,
+  Committee: Committee,
+  Bill: Bill,
+  Chair_of_committee: Chair_of_committee,
   sequelize: sequelize
 }
 //var rep;

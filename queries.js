@@ -12,9 +12,8 @@ const s = models.sequelize;
 // get all bills made by a certain person
 
 const getBillsByMember = (id) => {
-  return s.sync().then(() => {
-    return Representative.findOne({ where: { member_id: id }})
-  }).then((res) => {
+  return Representative.findOne({ where: { member_id: id }})
+  .then((res) => {
     if (res) {
       return res.getBills()
     } else {
@@ -26,9 +25,8 @@ const getBillsByMember = (id) => {
 //getBillsByMember('S000250').then((res) => { res.forEach(bill => console.log(bill.title)) });
 
 const getVotesByMember = (id) => {
-  return s.sync().then(() => {
-    return Representative.findOne({ where: { member_id: id }})
-  }).then((res) => {
+  return Representative.findOne({ where: { member_id: id }})
+  .then((res) => {
     if (res) {
       return res.getCongresses();
     } else {
@@ -40,9 +38,8 @@ const getVotesByMember = (id) => {
 //getVotesByMember('S000250').then((res) => { res.forEach(congress => console.log(congress.Voting.votes_with_party_pct)) });
 
 const getCongressionalSessionsByMember = (id) => {
-  return s.sync().then(() => {
-    return Representative.findOne({ where: { member_id: id }})
-  }).then((res) => {
+  return Representative.findOne({ where: { member_id: id }})
+  .then((res) => {
     if (res) {
       return res.getMember();
     } else {
@@ -58,9 +55,7 @@ const getCongressionalSessionsByMember = (id) => {
 //})
 
 const getChairsByMember = (id) => {
-  return s.sync().then(() => {
-    return Representative.findOne({ where: { member_id: id }})
-  }).then((res) => {
+  return Representative.findOne({ where: { member_id: id }}).then((res) => {
     if (res) {
       return res.getChair();
     } else {
@@ -76,12 +71,15 @@ const getChairsByMember = (id) => {
 //})
 
 const getAllReps = () => {
-  return s.sync().then(() => {
-    return Representative.findAll()
-  })
+  return Representative.findAll()
 }
 
 //getAllReps().then((res) => {
   //console.log(res);
   //res.forEach((rep) => { console.log(rep.first_name + ' ' +  rep.last_name) })
 //})
+
+module.exports = {
+  getBillsByMember,
+  getAllReps
+}

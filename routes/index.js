@@ -1,14 +1,18 @@
 var express = require('express')
 var router = express.Router()
 var async = require('async')
+var queries = require('../queries');
 
 router.get('/', function(req, res, next) {
   res.redirect('/representatives')
 })
 
 router.get('/representatives', function(req, res, next) {
-  res.render('index', {
-    tab: 'representatives'
+  queries.getAllReps().then((resp) => {
+    res.render('index', {
+      tab: 'representatives',
+      reps: resp
+    })
   })
 })
 

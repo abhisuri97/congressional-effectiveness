@@ -1,10 +1,11 @@
 {
-  "name": "congressional-effectiveness",
+  "name": "sequalize-demo",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "sequelize db:drop && node models.js"
   },
   "author": "",
   "license": "ISC",
@@ -16,7 +17,6 @@
     "mongoose": "^5.0.13",
     "path": "^0.12.7",
     "pg": "^7.4.1",
-    "pg-hstore": "^2.3.2",
-    "sequelize": "^4.37.3"
+    "sequelize": "^4.37.6"
   }
 }

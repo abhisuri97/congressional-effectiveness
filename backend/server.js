@@ -4,8 +4,8 @@ const mongoose = require('mongoose');
 const hbs = require('hbs');
 
 const config = require('../config.js');
-const models = require('./models/allModels')
 const index = require('../routes/index');
+const datadb = require('../models.js');
 
 // mongoose connection call
 mongoose.connect(config.database)
@@ -40,6 +40,8 @@ app.get('/', function(req, res, next) {
 
 app.set('port', process.env.PORT || 3000);
 
-app.listen(app.get('port'), () => {
-  console.log(`listening on port ${app.get('port')}`);
+datadb.sequelize.sync().then(() => {
+  app.listen(app.get('port'), () => {
+    console.log(`listening on port ${app.get('port')}`);
+  })
 })

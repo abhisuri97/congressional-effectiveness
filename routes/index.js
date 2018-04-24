@@ -37,7 +37,9 @@ router.get('/representatives/:member_id', function(req, res, next) {
       image: info.image,
       pct: info.Congresses.map((x) => { return `${x.Voting.votes_with_party_pct}% (${x.number}th congress)`}),
       missed: info.Congresses.map((x) => { return `${x.Voting.missed_votes} (${x.number}th congress)`}),
-      total: info.Congresses.map((x) => { return `${x.Voting.total_votes} (${x.number}th congress}`})
+      total: info.Congresses.map((x) => { return `${x.Voting.total_votes} (${x.number}th congress}`}),
+      billCount: info.Bills.length,
+      bills: info.Bills
     }
     res.render('index', {
       tab: 'representatives',

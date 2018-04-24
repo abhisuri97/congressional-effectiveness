@@ -86,46 +86,8 @@
       </tbody>
     </table>
 
-    <h5 class="heading">Subcommittees</h5>
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Subcommittee</th>
-          <th>Code</th>
-          <th>Title</th>
-          <th>Rank in Party</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Livestock and Foreign Agriculture</td>
-          <td>HSAG29</td>
-          <td>Member</td>
-          <td>7</td>
-        </tr>
-        <tr>
-          <td>Military Personnel</td>
-          <td>HSAS02</td>
-          <td>Member</td>
-          <td>8</td>
-        </tr>
-        <tr>
-          <td>Investigations, Oversight and Regulations</td>
-          <td>HSSM24</td>
-          <td>Chair</td>
-          <td>1</td>
-        </tr>
-        <tr>
-          <td>Economic Growth, Tax and Capital Access</td>
-          <td>HSSM27</td>
-          <td>Member</td>
-          <td>3</td>
-        </tr>
-      </tbody>
-    </table>
-
     <div style="display:inline-block; margin-right: 36px">
-      <h5 class="heading">Votes</h5>
+      <h5 class="heading">Votes & Bills</h5>
       <table class="table">
         <tbody>
           <tr>
@@ -136,24 +98,41 @@
             <th>Missed Votes</th>
             <td>{{#each info.missed}} {{ this }} <br/> {{/each}}</td>
           </tr>
-        </tbody>
-      </table>
-    </div>
-    <div style="display:inline-block">
-      <h5 class="heading">Bills</h5>
-      <table class="table">
-        <tbody>
           <tr>
             <th>Bills Sponsored</th>
-            <td>3</td>
-          </tr>
-          <tr>
-            <th>Bills Cosponsored</th>
-            <td>116</td>
+            <td>{{ info.billCount }}</td>
           </tr>
         </tbody>
       </table>
     </div>
+    <h5 class="heading">Subcommittees</h5>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Bill ID</th>
+          <th>Title</th>
+          <th>Congress</th>
+          <th>Is Active?</th>
+          <th>House Passage</th>
+          <th>Senate Passage</th>
+          <th>Enacted</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each info.bills}}
+        <tr>
+          <td>{{this.bill_id}}</td>
+          <td>{{this.title}}</td>
+          <td>{{this.congress}} {{ this.chamber }}</td>
+          <td>{{this.active}}</td>
+          <td>{{this.house_passage}}</td>
+          <td>{{this.senate_passage}}</td>
+          <td>{{#if this.enacted.length}}{{this.enacted}}{{else}}False{{/if}}</td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+
 
 
   </div>

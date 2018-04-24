@@ -69,18 +69,21 @@ Congress.belongsToMany(Representative, { through: Members_of_congress, foreignKe
 
 var Committee = sequelize.define('Committee', {
   name: { type: Sequelize.STRING },
+  title: { type: Sequelize.TEXT },
   committee_id: { type: Sequelize.STRING, primaryKey: true },
   chamber: { type: Sequelize.STRING }
 })
 
-var Chair_of_committee = sequelize.define('Chair_of_Committee', {
+var Member_of_committee = sequelize.define('Member_of_committee', {
   id: { type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true },
   committee_id: { type: Sequelize.STRING },
-  chair_id: { type: Sequelize.STRING }
+  member_id: { type: Sequelize.STRING },
+  m_rank: { type: Sequelize.STRING },
+  role: { type: Sequelize.STRING }
 })
 
-Representative.belongsToMany(Committee, { through: Chair_of_committee, foreignKey: 'chair_id', as: 'Chair' })
-Committee.belongsToMany(Representative, { through: Chair_of_committee, foreignKey: 'committee_id', as: 'CommiteeRep' })
+Representative.belongsToMany(Committee, { through: Member_of_committee, foreignKey: 'member_id', as: 'CommitteeMember' })
+Committee.belongsToMany(Representative, { through: Member_of_committee, foreignKey: 'committee_id', as: 'CommiteeRep' })
 
 var Bill = sequelize.define('Bill', {
   bill_id: { type: Sequelize.STRING },
@@ -114,60 +117,6 @@ module.exports = {
   Members_of_congress: Members_of_congress,
   Committee: Committee,
   Bill: Bill,
-  Chair_of_committee: Chair_of_committee,
+  Member_of_committee: Member_of_committee,
   sequelize: sequelize
 }
-//var rep;
-//var cong;
-//var cong2;
-//var committee;
-//var bill;
-//sequelize.sync()
-  //.then(() => {
-    //return Representative.create({
-      //member_id: 'hi there'
-    //})
-  //})
-  //.then((res) => {
-    //rep = res;
-    //return Congress.create({
-      //number: '114',
-      //chamber: 'test',
-    //})
-  //})
-  //.then((res) => {
-    //cong = res;
-    //return Congress.create({
-      //number: '115',
-      //chamber: 'test',
-    //})
-  //})
-  //.then((res) => {
-    //cong2 = res;
-    //rep.addCongress(cong)
-  //})
-  //.then((res) => {
-    //rep.addMember(cong);
-  //})
-  //.then((res) => {
-    //rep.addMember(cong2)
-  //})
-  //.then((res) => {
-    //return Committee.create({
-      //committee_id: 'test'
-    //})
-  //})
-  //.then((res) => {
-    //committee = res;
-    //rep.addChair(committee)
-  //})
-  //.then((res) => {
-    //return Bill.create({
-      //bill_id: 'test1'
-    //})
-  //})
-  //.then((res) => {
-    //bill = res;
-    //rep.addBills(bill)
-  //})
-//

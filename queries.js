@@ -3,7 +3,7 @@ const Representative = models.Representative;
 const Congress = models.Congress;
 const Members_of_congress = models.Members_of_congress;
 const Committee = models.Committee;
-const Chair_of_committee = models.Chair_of_committee;
+const Member_of_committee = models.Member_of_committee;
 const Bill = models.Bill;
 const Voting = models.Voting;
 const s = models.sequelize;
@@ -98,7 +98,7 @@ const getAllInfo = (id) => {
     },
     {
       model: Committee,
-      as: 'Chair'
+      as: 'CommitteeMember'
     }, 
     { 
       model: Bill,
@@ -109,6 +109,13 @@ const getAllInfo = (id) => {
   })
 }
 
+const getAllBills = () => {
+  return Bill.findAll({
+    include: [{
+      model: Representative,
+    }]
+  })
+}
 //getAllReps().then((res) => {
   //console.log(res);
   //res.forEach((rep) => { console.log(rep.first_name + ' ' +  rep.last_name) })
@@ -117,5 +124,6 @@ const getAllInfo = (id) => {
 module.exports = {
   getBillsByMember,
   getAllReps,
-  getAllInfo
+  getAllInfo,
+  getAllBills
 }

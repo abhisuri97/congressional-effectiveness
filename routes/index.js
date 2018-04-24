@@ -39,7 +39,8 @@ router.get('/representatives/:member_id', function(req, res, next) {
       missed: info.Congresses.map((x) => { return `${x.Voting.missed_votes} (${x.number}th congress)`}),
       total: info.Congresses.map((x) => { return `${x.Voting.total_votes} (${x.number}th congress}`}),
       billCount: info.Bills.length,
-      bills: info.Bills
+      bills: info.Bills,
+      committees: info.CommitteeMember
     }
     res.render('index', {
       tab: 'representatives',
@@ -50,8 +51,11 @@ router.get('/representatives/:member_id', function(req, res, next) {
 })
 
 router.get('/bills', function(req, res, next) {
-  res.render('index', {
-    tab: 'bills'
+  queries.getAllBills().then((bills) => {
+    res.render('index', {
+      tab: 'bills',
+      bills: bills
+    })
   })
 })
 

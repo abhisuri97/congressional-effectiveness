@@ -61,28 +61,18 @@
           <th>Committee</th>
           <th>Code</th>
           <th>Title</th>
-          <th>Rank in Party</th>
+          <th>Rank in Committee</th>
         </tr>
       </thead>
       <tbody>
+        {{#each info.committees}}
         <tr>
-          <td>Committee on Agriculture</td>
-          <td>HSAG</td>
-          <td>Member</td>
-          <td>20</td>
+          <td>{{this.name}}</td>
+          <td>{{this.Member_of_committee.committee_id}}</td>
+          <td>{{this.Member_of_committee.role}}</td>
+          <td>{{this.Member_of_committee.m_rank}}</td>
         </tr>
-        <tr>
-          <td>Committee on Armed Services</td>
-          <td>HSAS</td>
-          <td>Member</td>
-          <td>29</td>
-        </tr>
-        <tr>
-          <td>Committee on Small Business</td>
-          <td>HSSM</td>
-          <td>Chair</td>
-          <td>7</td>
-        </tr>
+        {{/each}}
       </tbody>
     </table>
 

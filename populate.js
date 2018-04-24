@@ -3,13 +3,15 @@ const Representative = models.Representative;
 const Congress = models.Congress;
 const Members_of_congress = models.Members_of_congress;
 const Committee = models.Committee;
-const Chair_of_committee = models.Chair_of_committee;
+const Member_of_committee = models.Member_of_committee;
 const Bill = models.Bill;
 const Voting = models.Voting;
 const s = models.sequelize;
 const csv = require('csvtojson');
 const path = require('path')
 const infoRaw = require('./files/legislators-current.json')
+const committees = require('./files/committees-current.json')
+const committee_members = require('./files/committee-membership-current.json')
 const info = {}
 infoRaw.forEach((i) => {
   info[i.id.bioguide] = i
@@ -112,13 +114,12 @@ s.sync().then(() => {
   console.log(err); 
 })
 .then(()  => {
-  return pcsv(path.join(__dirname, 'files', 'committee.csv'))
-}).then((objs) => {
   var committeeArr = [];
-  objs.forEach((o) => {
+  committees.forEach((o) => {
       committeeArr.push(Committee.create({
-          committee_id: o.committee_id,
-          chamber: o.chamber,
+          committee_id: o.thomas_id,
+          chamber: o.type,
+          title: o.title,
           name: o.name
         }))
   })
@@ -129,20 +130,27 @@ s.sync().then(() => {
   console.log(err); 
 })
 .then(()  => {
-  return pcsv(path.join(__dirname, 'files', 'chair_of_committee.csv'))
-}).then((objs) => {
   var committeeArr = [];
-  objs.forEach((o) => {
-      if (o.committee_id && o.chair_id) {
-        committeeArr.push(Chair_of_committee.create({
-            committee_id: o.committee_id,
-            chair_id: o.chair_id,
+  var keys = Object.keys(committee_members);
+  keys.forEach((o) => {
+    if (o.length <= 4) {
+      committee_members[o].forEach((m) => {
+        committeeArr.push(Representative.findOne({ where: { member_id: m.bioguide }}).then((res) => {
+          if (res) {
+            Member_of_committee.create({
+                committee_id: o,
+                member_id: m.bioguide,
+                m_rank: m.rank,
+                role: m.title ? m.title : 'Member'
+            })
+          }
         }))
-      }
+      })
+    }
   })
   return Promise.all(committeeArr);
 }).then((arr) => {
-  console.log('done adding committee chairs: Added ' + arr.length)
+  console.log('done adding committee members: Added ' + arr.length)
 }).catch((err) => {
   console.log(err); 
 })

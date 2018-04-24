@@ -8,7 +8,6 @@ const Bill = models.Bill;
 const Voting = models.Voting;
 const s = models.sequelize;
 
-
 // get all bills made by a certain person
 
 const getBillsByMember = (id) => {
@@ -71,7 +70,43 @@ const getChairsByMember = (id) => {
 //})
 
 const getAllReps = () => {
-  return Representative.findAll()
+  var reps;
+  return Representative.findAll({
+    include: [{
+      model: Congress
+    }]
+  }).then((reps) => {
+    reps.forEach((i) => {
+      i.Congresses = i.Congresses.sort((a, b) => {
+        return a.number -  b.number
+      })
+    })
+    return reps;
+  })
+}
+
+const getAllInfo = (id) => {
+  return Representative.findOne({ 
+    where: { member_id: id }, 
+    include: [
+    {
+      model: Congress,
+    },
+    {
+      model: Congress,
+      as: 'Member'
+    },
+    {
+      model: Committee,
+      as: 'Chair'
+    }, 
+    { 
+      model: Bill,
+      as: 'Bills'
+    }]
+  }).then((rep) => {
+    return rep;
+  })
 }
 
 //getAllReps().then((res) => {
@@ -81,5 +116,6 @@ const getAllReps = () => {
 
 module.exports = {
   getBillsByMember,
-  getAllReps
+  getAllReps,
+  getAllInfo
 }

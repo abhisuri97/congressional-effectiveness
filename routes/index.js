@@ -17,9 +17,22 @@ router.get('/representatives', function(req, res, next) {
 })
 
 router.get('/representatives/:member_id', function(req, res, next) {
-  res.render('index', {
-    tab: 'representatives',
-    member_id: req.params['member_id']
+  //var bills;
+  //var votes;
+  //getBillsByMember(req.params['member_id']).then((billsList) => {
+    //bills = billList;
+    //return getVotesByMember(req.params['member_id'])
+  //}).then((voteList) => {
+    //votes = voteList;
+    //return getCongressionalSessionsByMember
+  //})
+  queries.getAllInfo(req.params['member_id']).then((info) => {
+    console.log(info);
+    res.render('index', {
+      tab: 'representatives',
+      member_id: req.params['member_id'],
+      member_info: info
+    })
   })
 })
 

@@ -27,11 +27,22 @@ router.get('/representatives/:member_id', function(req, res, next) {
     //return getCongressionalSessionsByMember
   //})
   queries.getAllInfo(req.params['member_id']).then((info) => {
-    console.log(info);
+    var infoObj = {
+      name: `${info.first_name} ${info.middle_name} ${info.last_name}`,
+      party: (info.party == 'R') ? 'Republican' : ((info.party == 'D') ? 'Democrat' : `Other  (${info.party})`),
+      inOffice : info.Congresses.filter((x) => x.number == '115').length > 0 ? 'Yes' : 'No',
+      role: info.Member.map((x) => { if (x.Members_of_congress.leadership_role) return `${x.Members_of_congress.leadership_role} (${x.number}th congress)`} ),
+      state: info.state,
+      url: info.last_url,
+      image: info.image,
+      pct: info.Congresses.map((x) => { return `${x.Voting.votes_with_party_pct}% (${x.number}th congress)`}),
+      missed: info.Congresses.map((x) => { return `${x.Voting.missed_votes} (${x.number}th congress)`}),
+      total: info.Congresses.map((x) => { return `${x.Voting.total_votes} (${x.number}th congress}`})
+    }
     res.render('index', {
       tab: 'representatives',
       member_id: req.params['member_id'],
-      member_info: info
+      info: infoObj
     })
   })
 })

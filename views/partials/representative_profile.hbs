@@ -1,62 +1,53 @@
 <div class="columns">
 
-  <div class="column is-5">
+  <div class="column is-4">
     <div class="card">
       <header class="card-header">
         <p class="card-header-title" style="margin-left: 22px">
-          Mickey Mouse
+          {{ info.name }}<br/>
         </p>
       </header>
+      <div class="card-image">
+        <figure class="image is-3by4">
+          <img src="{{ info.image }}" slt="Placeholder image">
+        </figure>
+      </div>
       <div class="card-content">
         <div class="content">
           <table class="table is-striped">
             <tbody>
               <tr>
-                <th>Gender</th>
-                <td>Male</td>
-              </tr>
-              <tr>
                 <th>Party</th>
-                <td>Republican</td>
+                <td>
+                  {{ info.party }}
+                </td>
               </tr>
               <tr>
                 <th>Currently in office?</th>
-                <td>Yes</td>
+                <td>{{ info.inOffice }}</td>
               </tr>
               <tr>
                 <th>Role</th>
-                <td>House Representative</td>
+                <td>{{#each info.role}} {{ this }}{{/each}}</td>
               </tr>
               <tr>
                 <th>State</th>
-                <td>MS</td>
+                <td>{{info.state}}</td>
               </tr>
               <tr>
                 <th>Effectiveness Score</th>
-                <td>92</td>
+                <td></td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
       <footer class="card-footer">
-        <a href="#" class="card-footer-item">
+        <a href="{{ info.url }}" class="card-footer-item">
           <span class="icon">
             <i class="fas fa-globe"></i>
           </span>
           Website
-        </a>
-        <a href="#" class="card-footer-item">
-          <span class="icon">
-            <i class="fab fa-twitter"></i>
-          </span>
-          Twitter
-        </a>
-        <a href="#" class="card-footer-item">
-          <span class="icon">
-            <i class="fab fa-facebook-square"></i>
-          </span>
-          Facebook
         </a>
       </footer>
     </div>
@@ -139,11 +130,11 @@
         <tbody>
           <tr>
             <th>% Votes with Party Line</th>
-            <td>97.19</td>
+            <td>{{#each info.pct}} {{ this }}<br/> {{/each}}</td>
           </tr>
           <tr>
             <th>Missed Votes</th>
-            <td>0</td>
+            <td>{{#each info.missed}} {{ this }} <br/> {{/each}}</td>
           </tr>
         </tbody>
       </table>

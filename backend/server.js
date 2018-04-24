@@ -7,6 +7,14 @@ const config = require('../config.js');
 const index = require('../routes/index');
 const datadb = require('../models.js');
 
+hbs.registerHelper("ifv", function(conditional, options) {
+  if (options.hash.desired === options.hash.type) {
+    options.fn(this);
+  } else {
+    options.inverse(this);
+  }
+});
+
 // mongoose connection call
 mongoose.connect(config.database)
   .catch((err) => {

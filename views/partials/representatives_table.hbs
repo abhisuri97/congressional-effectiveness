@@ -6,16 +6,18 @@
     <th>Party</th>
     <th>State</th>
     <th>Most Recent Term Dates</th>
-    <th>Score (1-10)</th>
+    <th>Congressional Sessions</th>
+    <th>Grade (A+ to F)</th>
   </tr>
 </thead>
 <tbody>
-{{#each reps}}
-  <tr>
-    <td>{{this.first_name}} {{ this.last_name }}</td>
-    <td>{{this.party}}</td>
-    <td>{{this.state}}</td>
-    <td>{{this.last_term_start}} to {{this.last_term_end}}</td>
+{{#each reps as |rep|}}
+  <tr onclick="javascript:location.href='/representatives/{{rep.member_id}}'">
+    <td>{{rep.first_name}} {{ rep.last_name }}</td>
+    <td>{{rep.party}}</td>
+    <td>{{rep.state}}</td>
+    <td>{{rep.last_term_start}} to {{ rep.last_term_end }}</td>
+    <td>{{#each rep.Congresses as |c|}}{{ c.number}}{{#unless @last}},{{/unless}}{{/each}}</td>
     <td></td>
   </tr>
 {{/each}}

@@ -32,6 +32,7 @@ const getGrade = (a) => {
   if (a >= 0.4) return 'D'
   else return 'F'
 }
+
 router.get('/representatives/:member_id', function(req, res, next) {
   //var bills;
   //var votes;
@@ -90,12 +91,25 @@ router.get('/representatives/:member_id', function(req, res, next) {
       billRank: `(Bill ranking is ${billRank})`,
       overallA:  overallA
     }
-    res.render('index', {
-      tab: 'representatives',
-      username: req.session.username,
-      member_id: req.params['member_id'],
-      info: infoObj
-    })
+    if (req.session.username) {
+      userdb.getFollowing(req.session.username, function (err, memberIds) {
+        res.render('index', {
+          tab: 'representatives',
+          username: req.session.username,
+          member_id: req.params['member_id'],
+          following: memberIds.includes(req.params['member_id']),
+          info: infoObj
+        })
+      })
+    } else {
+      res.render('index', {
+        tab: 'representatives',
+        username: req.session.username,
+        member_id: req.params['member_id'],
+        following: false,
+        info: infoObj
+      })
+    }
   })
 })
 
@@ -103,7 +117,6 @@ router.post('/representatives/:member_id/follow', function (req, res, next) {
   if (!req.session.username) {
     return res.redirect('back');
   }
-  console.log('Follow the representative ' + req.params['member_id'])
   userdb.followRepresentative(req.session.username, req.params['member_id'], function(err) {
     if (err) console.log('Error following representative:' + err)
     res.redirect('back');
@@ -114,7 +127,6 @@ router.post('/representatives/:member_id/unfollow', function (req, res, next) {
   if (!req.session.username) {
     return res.redirect('back');
   }
-  console.log('Unfollow the representative ' + req.params['member_id'])
   userdb.unfollowRepresentative(req.session.username, req.params['member_id'], function(err) {
     if (err) console.log('Error unfollowing representative:' + err)
     res.redirect('back');

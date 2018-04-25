@@ -43,8 +43,25 @@
         </div>
       </div>
       <footer class="card-footer">
+        {{#if username}}
+          {{#if following}}
+            <a class="card-footer-item" id="unfollow-button">
+              <span class="icon" style="margin-right: 6px;">
+                <i class="fas fa-user-times"></i>
+              </span>
+              Unfollow
+            </a>
+          {{else}}
+            <a class="card-footer-item" id="follow-button">
+              <span class="icon" style="margin-right: 6px;">
+                <i class="fas fa-user-plus"></i>
+              </span>
+              Follow
+            </a>
+          {{/if}}
+        {{/if}}
         <a href="{{ info.url }}" class="card-footer-item">
-          <span class="icon">
+          <span class="icon" style="margin-right: 4px;">
             <i class="fas fa-globe"></i>
           </span>
           Website
@@ -124,9 +141,28 @@
         {{/each}}
       </tbody>
     </table>
-
-
-
   </div>
-
 </div>
+
+<script type="text/javascript">
+$(document).ready(function () {
+  $('#follow-button').click(function () {
+    $.ajax({
+      type: 'POST',
+      url: '/representatives/{{member_id}}/follow',
+      success: function() {
+        location.reload()
+      }
+    })
+  })
+  $('#unfollow-button').click(function () {
+    $.ajax({
+      type: 'POST',
+      url: '/representatives/{{member_id}}/unfollow',
+      success: function() {
+        location.reload()
+      }
+    })
+  })
+})
+</script>

@@ -8,23 +8,17 @@
     <th>Most Recent Term Dates</th>
     <th>Congressional Sessions</th>
     <th>Grade (A+ to F)</th>
-    <th></th>
   </tr>
 </thead>
 <tbody>
 {{#each reps as |rep|}}
   <tr>
-    <td><a href="/representatives/{{rep.member_id}}" class="is-link">{{rep.first_name}} {{ rep.last_name }}</a></td>
+    <td><a href="/representatives/{{rep.member_id}}">{{rep.first_name}} {{ rep.last_name }}</a></td>
     <td>{{rep.party}}</td>
     <td>{{rep.state}}</td>
     <td>{{rep.last_term_start}} to {{ rep.last_term_end }}</td>
     <td>{{#each rep.Congresses as |c|}}{{ c.number}}{{#unless @last}},{{/unless}}{{/each}}</td>
     <td>{{getGrade rep.grade}}</td>
-    <td>
-      <form method="post" action="/representatives/{{rep.member_id}}/follow">
-        <button type="submit" class="button is-info">Follow</button>
-      </form>
-    </td>
   </tr>
 {{/each}}
 </tbody>

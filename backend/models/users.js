@@ -93,9 +93,9 @@ const followRepresentative = function (username, repId, callback) {
         if (err) {
           return callback(err)
         }
-        callback(null)
       })
     }
+    return callback(null)
   })
 }
 
@@ -116,9 +116,9 @@ const unfollowRepresentative = function (username, repId, callback) {
         if (err) {
           return callback(err)
         }
-        callback(null)
       })
     }
+    return callback(null)
   })
 }
 

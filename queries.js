@@ -138,12 +138,11 @@ const getReps = (memberIds) => {
       model: Congress
     }]
   }).then((reps) => {
-    console.log(reps)
-    // reps.forEach((i) => {
-    //   i.Congresses = i.Congresses.sort((a, b) => {
-    //     return a.number -  b.number
-    //   })
-    // })
+    reps.forEach((i) => {
+      i.Congresses = i.Congresses.sort((a, b) => {
+        return a.number -  b.number
+      })
+    })
     return reps;
   })
 }

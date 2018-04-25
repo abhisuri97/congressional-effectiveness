@@ -8,10 +8,10 @@ module.exports =  {
     'logging': false,
   },
   'production': {
-    'db': 'cis450_project',
-    'username': 'cis450',
-    'password':  'cis450550',
-    'host': 'cis450test.cnlmnmamuogs.us-east-1.rds.amazonaws.com',
+    'db': 'congressdb',
+    'username': 'congress',
+    'password':  'congress2018',
+    'host': 'congressional-effectiveness.cnlmnmamuogs.us-east-1.rds.amazonaws.com',
     'logging': true
   },
   'type': 'production'

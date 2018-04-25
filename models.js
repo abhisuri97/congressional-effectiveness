@@ -61,6 +61,12 @@ var Members_of_congress = sequelize.define('Members_of_congress', {
   member_id: { type: Sequelize.STRING },
   congress_number_chamber: { type: Sequelize.STRING },
   leadership_role: { type: Sequelize.STRING },
+  bill_rank: { type: Sequelize.INTEGER },
+  bill_pass_rank: { type: Sequelize.INTEGER },
+  miss_rank: { type: Sequelize.INTEGER },
+  align_rank: { type: Sequelize.INTEGER },
+  committee_rank: { type: Sequelize.INTEGER },
+  committee_chair_rank: { type: Sequelize.INTEGER },
   title: { type: Sequelize.STRING }
 })
 

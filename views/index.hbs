@@ -6,18 +6,26 @@
       <div class="navbar-menu">
         <div class="navbar-end">
           <div class="navbar-item">
-            <div class="field is-grouped">
-              <p class="control">
-                <a class="button is-link is-inverted" href="/login">
-                  Login
-                </a>
-              </p>
-              <p class="control">
-                <a class="button is-link is-inverted" href="/signup">
-                  Sign up
-                </a>
-              </p>
-            </div>
+            {{#if username}}
+            <form method="post" action="/logout">
+              <button class="button is-link is-inverted" type="submit">
+                Logout
+              </button>
+            </form>
+            {{else}}
+              <div class="field is-grouped">
+                <p class="control">
+                  <a class="button is-link is-inverted" href="/login">
+                    Login
+                  </a>
+                </p>
+                <p class="control">
+                  <a class="button is-link is-inverted" href="/signup">
+                    Sign up
+                  </a>
+                </p>
+              </div>
+            {{/if}}
           </div>
         </div>
       </div>

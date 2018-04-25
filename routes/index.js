@@ -1,7 +1,9 @@
 var express = require('express')
 var router = express.Router()
 var async = require('async')
-var queries = require('../queries');
+var queries = require('../queries')
+const bcrypt = require('bcrypt')
+var userdb = require('../backend/models/users')
 
 router.get('/', function(req, res, next) {
   res.redirect('/representatives')
@@ -11,6 +13,7 @@ router.get('/representatives', function(req, res, next) {
   queries.getAllReps().then((resp) => {
     res.render('index', {
       tab: 'representatives',
+      username: req.session.username,
       reps: resp
     })
   })
@@ -44,6 +47,7 @@ router.get('/representatives/:member_id', function(req, res, next) {
     }
     res.render('index', {
       tab: 'representatives',
+      username: req.session.username,
       member_id: req.params['member_id'],
       info: infoObj
     })
@@ -54,6 +58,7 @@ router.get('/bills', function(req, res, next) {
   queries.getAllBills().then((bills) => {
     res.render('index', {
       tab: 'bills',
+      username: req.session.username,
       bills: bills
     })
   })
@@ -61,7 +66,8 @@ router.get('/bills', function(req, res, next) {
 
 router.get('/committees', function(req, res, next) {
   res.render('index', {
-    tab: 'committees'
+    tab: 'committees',
+    username: req.session.username
   })
 })
 
@@ -71,6 +77,41 @@ router.get('/login', function(req, res, next) {
 
 router.get('/signup', function(req, res, next) {
   res.render('signup')
+})
+
+router.post('/login', function (req, res, next) {
+  username = req.body.username
+  password = req.body.password
+
+  userdb.authenticateUser(username, password, function(err, isMatch, msg) {
+    if (err) return res.send(err)
+    if (isMatch) {
+      req.session.username = username
+      res.redirect('/')
+    } else {
+      res.send(msg)
+    }
+  })
+})
+
+router.post('/signup', function(req, res, next) {
+  username = req.body.username
+  password = req.body.password
+
+  userdb.createAccount(username, password, function(err, success, msg) {
+    if (err) return res.send(err)
+    if (success) {
+      req.session.username = username
+      res.redirect('/')
+    } else {
+      res.send(msg)
+    }
+  })
+})
+
+router.post('/logout', function(req, res, next) {
+  req.session.destroy()
+  res.redirect('/')
 })
 
 module.exports = router

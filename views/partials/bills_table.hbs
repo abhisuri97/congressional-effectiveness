@@ -1,5 +1,15 @@
 <table class="table is-striped">
 
+<!-- Search -->
+<div class="field">
+  <div class="control has-icons-left">
+    <input class="input" type="text" placeholder="Search a bill...">
+    <span class="icon is-small is-left">
+      <i class="fas fa-search"></i>
+    </span>
+  </div>
+</div>
+
 <thead>
   <tr>
     <th>Bill Name</th>
@@ -20,3 +30,18 @@
 </tbody>
 
 </table>
+
+<script>
+  $(document).ready(function() {
+    $('input').on('keyup', function() {
+      var text = $('input').val().toLowerCase();
+      $('tbody').find('tr').each(function() {
+        if(!$(this).text().toLowerCase().includes(text)) {
+          $(this).hide()
+        } else {
+          $(this).show();
+        }
+      })
+    })
+  })
+</script>

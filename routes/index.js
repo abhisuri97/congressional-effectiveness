@@ -1,7 +1,9 @@
 var express = require('express')
 var router = express.Router()
 var async = require('async')
-var queries = require('../queries');
+var queries = require('../queries')
+const bcrypt = require('bcrypt')
+var userdb = require('../backend/models/users')
 
 router.get('/', function(req, res, next) {
   res.redirect('/representatives')
@@ -11,6 +13,7 @@ router.get('/representatives', function(req, res, next) {
   queries.getAllReps().then((resp) => {
     res.render('index', {
       tab: 'representatives',
+      username: req.session.username,
       reps: resp
     })
   })
@@ -29,6 +32,7 @@ const getGrade = (a) => {
   if (a >= 0.4) return 'D'
   else return 'F'
 }
+
 router.get('/representatives/:member_id', function(req, res, next) {
   //var bills;
   //var votes;
@@ -42,7 +46,7 @@ router.get('/representatives/:member_id', function(req, res, next) {
   var maxCommittee;
   var maxCC;
   var alignRank;
-  queries.getMaxCommitteeRank().then((max) => maxCommittee=max).then(() => { 
+  queries.getMaxCommitteeRank().then((max) => maxCommittee=max).then(() => {
     return queries.getMaxCommitteeChairRank()
   }).then((r) => {
     maxCC = r;
@@ -51,8 +55,8 @@ router.get('/representatives/:member_id', function(req, res, next) {
   }).then((info) => {
     committeeRank  = info.Member.filter((x) => { return x.number == 115 })[0].Members_of_congress.committee_rank
     committeeChairRank =info.Member.filter((x) => { return x.number == 115 })[0].Members_of_congress.committee_chair_rank
-    committeeChairRank = (committeeChairRank ? committeeChairRank : maxCC) 
-    committeeRank = (committeeRank ? committeeRank : maxCommittee) 
+    committeeChairRank = (committeeChairRank ? committeeChairRank : maxCC)
+    committeeRank = (committeeRank ? committeeRank : maxCommittee)
     alignRank =info.Member.map((x) => (x.Members_of_congress.align_rank)? `${x.Members_of_congress.align_rank}/537` : '537/537')
     alignRankC = alignRank.reduce(function(p,c,i,a){return p + (eval(c)/a.length)},0)
     console.log(alignRankC)
@@ -87,11 +91,45 @@ router.get('/representatives/:member_id', function(req, res, next) {
       billRank: `(Bill ranking is ${billRank})`,
       overallA:  overallA
     }
-    res.render('index', {
-      tab: 'representatives',
-      member_id: req.params['member_id'],
-      info: infoObj
-    })
+    if (req.session.username) {
+      userdb.getFollowing(req.session.username, function (err, memberIds) {
+        res.render('index', {
+          tab: 'representatives',
+          username: req.session.username,
+          member_id: req.params['member_id'],
+          following: memberIds.includes(req.params['member_id']),
+          info: infoObj
+        })
+      })
+    } else {
+      res.render('index', {
+        tab: 'representatives',
+        username: req.session.username,
+        member_id: req.params['member_id'],
+        following: false,
+        info: infoObj
+      })
+    }
+  })
+})
+
+router.post('/representatives/:member_id/follow', function (req, res, next) {
+  if (!req.session.username) {
+    return res.redirect('back');
+  }
+  userdb.followRepresentative(req.session.username, req.params['member_id'], function(err) {
+    if (err) console.log('Error following representative:' + err)
+    res.redirect('back');
+  })
+})
+
+router.post('/representatives/:member_id/unfollow', function (req, res, next) {
+  if (!req.session.username) {
+    return res.redirect('back');
+  }
+  userdb.unfollowRepresentative(req.session.username, req.params['member_id'], function(err) {
+    if (err) console.log('Error unfollowing representative:' + err)
+    res.redirect('back');
   })
 })
 
@@ -99,6 +137,7 @@ router.get('/bills', function(req, res, next) {
   queries.getAllBills().then((bills) => {
     res.render('index', {
       tab: 'bills',
+      username: req.session.username,
       bills: bills
     })
   })
@@ -106,7 +145,8 @@ router.get('/bills', function(req, res, next) {
 
 router.get('/committees', function(req, res, next) {
   res.render('index', {
-    tab: 'committees'
+    tab: 'committees',
+    username: req.session.username
   })
 })
 
@@ -116,6 +156,94 @@ router.get('/login', function(req, res, next) {
 
 router.get('/signup', function(req, res, next) {
   res.render('signup')
+})
+
+router.post('/login', function (req, res, next) {
+  username = req.body.username
+  password = req.body.password
+
+  if (!username || !password) {
+    return res.render('login', {
+      message: 'Please enter a username and password.'
+    })
+  }
+
+  userdb.authenticateUser(username, password, function(err, isMatch, msg) {
+    if (err) {
+      console.log('Error authenticating user: ' + err)
+      return res.render('login', {
+        message: 'Could not authenticate user. Please try again.'
+      })
+    }
+    if (isMatch) {
+      req.session.username = username
+      res.redirect('/')
+    } else {
+      res.render('login', {
+        message: "The password you've entered is incorrect. Please try again."
+      })
+    }
+  })
+})
+
+router.post('/signup', function(req, res, next) {
+  username = req.body.username
+  password = req.body.password
+  password2 = req.body.password2
+
+  if (!username || !password || !password2) {
+    return res.render('signup', {
+      message: 'Please enter a username and password.'
+    })
+  }
+  if (password != password2) {
+    return res.render('signup', {
+      message: 'Passwords do not match. Please try again.'
+    })
+  }
+  if (password.length < 6) {
+    return res.render('signup', {
+      message: 'Your password must be at least 6 characters long.'
+    })
+  }
+
+  userdb.createAccount(username, password, function(err, success, msg) {
+    if (err) {
+      console.log('Error authenticating user: ' + err)
+      return res.render('signup', {
+        message: "Could not authenticate user. Please try again."
+      })
+    }
+    if (success) {
+      req.session.username = username
+      res.redirect('/')
+    } else {
+      res.render('signup', {
+        message: msg
+      })
+    }
+  })
+})
+
+router.post('/logout', function (req, res, next) {
+  req.session.destroy()
+  res.redirect('/')
+})
+
+router.get('/profile', function (req, res, next) {
+  if (!req.session.username) {
+    return res.redirect('/')
+  }
+  userdb.getFollowing(username, function (err, memberIds) {
+    console.log(memberIds)
+    queries.getReps(memberIds).then((resp) => {
+      res.render('index', {
+        tab: 'profile',
+        username: req.session.username,
+        following: resp
+      })
+    })
+  })
 })
 
 module.exports = router

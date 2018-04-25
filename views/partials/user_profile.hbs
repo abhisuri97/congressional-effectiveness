@@ -1,0 +1,48 @@
+<div class="columns">
+
+  <div class="column is-3">
+    <div class="card">
+      <div class="card-content">
+        <div class="content">
+          <table class="table is-fullwidth is-striped">
+            <tbody>
+              <tr>
+                <th>Username</th>
+                <td>{{ username }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="column">
+    <h5 class="heading">Following</h5>
+    <table class="table is-fullwidth is-striped">
+      <thead>
+        <tr>
+          <th>Representative Name</th>
+          <th>Party</th>
+          <th>State</th>
+          <th>Most Recent Term Dates</th>
+          <th>Congressional Sessions</th>
+          <th>Grade (A+ to F)</th>
+        </tr>
+      </thead>
+      <tbody>
+      {{#each following as |rep|}}
+        <tr onclick="javascript:location.href='/representatives/{{rep.member_id}}'">
+          <td>{{rep.first_name}} {{ rep.last_name }}</td>
+          <td>{{rep.party}}</td>
+          <td>{{rep.state}}</td>
+          <td>{{rep.last_term_start}} to {{ rep.last_term_end }}</td>
+          <td>{{#each rep.Congresses as |c|}}{{ c.number}}{{#unless @last}},{{/unless}}{{/each}}</td>
+          <td>{{getGrade rep.grade}}</td>
+        </tr>
+      {{/each}}
+      </tbody>
+    </table>
+  </div>
+
+</div>

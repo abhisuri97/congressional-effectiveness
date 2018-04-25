@@ -17,8 +17,8 @@
 </thead>
 <tbody>
 {{#each reps as |rep|}}
-  <tr onclick="javascript:location.href='/representatives/{{rep.member_id}}'">
-    <td>{{rep.first_name}} {{ rep.last_name }}</td>
+  <tr>
+    <td><a href="/representatives/{{rep.member_id}}">{{rep.first_name}} {{ rep.last_name }}</a></td>
     <td>{{rep.party}}</td>
     <td>{{rep.state}}</td>
     <td>{{rep.last_term_start}} to {{ rep.last_term_end }}</td>

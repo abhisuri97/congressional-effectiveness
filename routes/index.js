@@ -29,7 +29,17 @@ router.get('/representatives/:member_id', function(req, res, next) {
     //votes = voteList;
     //return getCongressionalSessionsByMember
   //})
-  queries.getAllInfo(req.params['member_id']).then((info) => {
+  var maxCommittee;
+  var maxCC;
+  queries.getMaxCommitteeRank().then((max) => maxCommittee=max).then(() => { 
+    return queries.getMaxCommitteeChairRank()
+  }).then((r) => {
+    maxCC = r;
+  }).then(() => {
+    return queries.getAllInfo(req.params['member_id'])
+  }).then((info) => {
+    committeeRank  = info.Member.filter((x) => { return x.number == 115 })[0].Members_of_congress.committee_rank
+    committeeChairRank =info.Member.filter((x) => { return x.number == 115 })[0].Members_of_congress.committee_chair_rank
     var infoObj = {
       name: `${info.first_name} ${info.middle_name} ${info.last_name}`,
       party: (info.party == 'R') ? 'Republican' : ((info.party == 'D') ? 'Democrat' : `Other  (${info.party})`),
@@ -43,7 +53,9 @@ router.get('/representatives/:member_id', function(req, res, next) {
       total: info.Congresses.map((x) => { return `${x.Voting.total_votes} (${x.number}th congress}`}),
       billCount: info.Bills.length,
       bills: info.Bills,
-      committees: info.CommitteeMember
+      committees: info.CommitteeMember,
+      committeeRank:  (committeeRank ? committeeRank : maxCommittee) + '/' + maxCommittee,
+      committeeChairRank: (committeeChairRank ? committeeChairRank : maxCC) + '/' + maxCC
     }
     res.render('index', {
       tab: 'representatives',

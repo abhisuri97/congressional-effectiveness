@@ -1,6 +1,8 @@
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
+var bodyParser = require('body-parser');
+var session = require('express-session')
 const hbs = require('hbs');
 
 const config = require('../config.js');
@@ -29,6 +31,13 @@ const app = express()
 app.set('secret', config.secret);
 
 // bodyparser middleware JIC
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(session({
+  secret: 'cis450project',
+  resave: false,
+  saveUninitialized: true
+}));
 
 // view engine setup
 app.set('views', path.join(__dirname, '/../views'));

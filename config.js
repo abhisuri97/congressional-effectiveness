@@ -1,5 +1,5 @@
 module.exports =  {
-  'database': 'mongodb://localhost:27017/450proj',
+  'database': (process.env.MONGODB_URI || 'mongodb://localhost:27017/450proj'),
   'development': {
     'db': 'cis450_project',
     'username': 'cis450project',
@@ -14,5 +14,5 @@ module.exports =  {
     'host': 'cis450test.cnlmnmamuogs.us-east-1.rds.amazonaws.com',
     'logging': true
   },
-  'type': 'development'
+  'type': 'production'
 }

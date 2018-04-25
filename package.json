@@ -5,7 +5,9 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "sequelize db:drop && node models.js"
+    "start": "node backend/server.js",
+    "populate": "node  populate.js",
+    "calculate": "node calculate.js"
   },
   "author": "",
   "license": "ISC",

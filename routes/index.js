@@ -83,13 +83,26 @@ router.post('/login', function (req, res, next) {
   username = req.body.username
   password = req.body.password
 
+  if (!username || !password) {
+    return res.render('login', {
+      message: 'Please enter a username and password.'
+    })
+  }
+
   userdb.authenticateUser(username, password, function(err, isMatch, msg) {
-    if (err) return res.send(err)
+    if (err) {
+      console.log('Error authenticating user: ' + err)
+      return res.render('login', {
+        message: 'Could not authenticate user. Please try again.'
+      })
+    }
     if (isMatch) {
       req.session.username = username
       res.redirect('/')
     } else {
-      res.send(msg)
+      res.render('login', {
+        message: "The password you've entered is incorrect. Please try again."
+      })
     }
   })
 })
@@ -97,14 +110,38 @@ router.post('/login', function (req, res, next) {
 router.post('/signup', function(req, res, next) {
   username = req.body.username
   password = req.body.password
+  password2 = req.body.password2
+
+  if (!username || !password || !password2) {
+    return res.render('signup', {
+      message: 'Please enter a username and password.'
+    })
+  }
+  if (password != password2) {
+    return res.render('signup', {
+      message: 'Passwords do not match. Please try again.'
+    })
+  }
+  if (password.length < 6) {
+    return res.render('signup', {
+      message: 'Your password must be at least 6 characters long.'
+    })
+  }
 
   userdb.createAccount(username, password, function(err, success, msg) {
-    if (err) return res.send(err)
+    if (err) {
+      console.log('Error authenticating user: ' + err)
+      return res.render('signup', {
+        message: "Could not authenticate user. Please try again."
+      })
+    }
     if (success) {
       req.session.username = username
       res.redirect('/')
     } else {
-      res.send(msg)
+      res.render('signup', {
+        message: msg
+      })
     }
   })
 })

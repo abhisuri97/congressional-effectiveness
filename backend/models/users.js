@@ -34,7 +34,7 @@ var authenticateUser = function (username, candidatePassword, callback) {
     username: username
   }, function (err, user) {
     if (err) return callback(err)
-    if (!user) return callback(null, false, 'Username does not exist')
+    if (!user) return callback(null, false, 'Username does not exist.')
     bcrypt.compare(candidatePassword, user.password, function (err, isMatch) {
       if (err) {
         return callback(err)
@@ -55,7 +55,7 @@ var createAccount = function (username, password, callback) {
     if (err) return callback(err)
     if (existingUser) {
       // username already exists
-      return callback(null, false, 'Username already exists.')
+      return callback(null, false, 'Username already exists. Please pick another one.')
     } else {
       var user = new User({username: username, password: password})
       // encrypt password

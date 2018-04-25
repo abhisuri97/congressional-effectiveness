@@ -116,6 +116,13 @@ const getAllBills = () => {
     }]
   })
 }
+
+const getMaxCommitteeRank = () => {
+  return Members_of_congress.max('committee_rank').then((r) => { console.log(r); return r})
+}
+const getMaxCommitteeChairRank = () => {
+  return Members_of_congress.max('committee_chair_rank').then((r) => { console.log(r); return r})
+}
 //getAllReps().then((res) => {
   //console.log(res);
   //res.forEach((rep) => { console.log(rep.first_name + ' ' +  rep.last_name) })
@@ -125,5 +132,7 @@ module.exports = {
   getBillsByMember,
   getAllReps,
   getAllInfo,
-  getAllBills
+  getAllBills,
+  getMaxCommitteeRank,
+  getMaxCommitteeChairRank
 }

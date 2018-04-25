@@ -10,7 +10,6 @@ const sequelize = new Sequelize(type.db, type.username, type.password, {
     acquire: 30000,
   },
   operatorsAliases: false,
-  logging: type.logging
 });
 
 var Representative = sequelize.define('Representative', {

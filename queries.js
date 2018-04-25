@@ -86,8 +86,8 @@ const getAllReps = () => {
 }
 
 const getAllInfo = (id) => {
-  return Representative.findOne({ 
-    where: { member_id: id }, 
+  return Representative.findOne({
+    where: { member_id: id },
     include: [
     {
       model: Congress,
@@ -99,8 +99,8 @@ const getAllInfo = (id) => {
     {
       model: Committee,
       as: 'CommitteeMember'
-    }, 
-    { 
+    },
+    {
       model: Bill,
       as: 'Bills'
     }]
@@ -128,11 +128,32 @@ const getMaxCommitteeChairRank = () => {
   //res.forEach((rep) => { console.log(rep.first_name + ' ' +  rep.last_name) })
 //})
 
+const getReps = (memberIds) => {
+  var reps;
+  return Representative.findAll({
+    where: {
+      member_id: memberIds
+    },
+    include: [{
+      model: Congress
+    }]
+  }).then((reps) => {
+    console.log(reps)
+    // reps.forEach((i) => {
+    //   i.Congresses = i.Congresses.sort((a, b) => {
+    //     return a.number -  b.number
+    //   })
+    // })
+    return reps;
+  })
+}
+
 module.exports = {
   getBillsByMember,
   getAllReps,
   getAllInfo,
   getAllBills,
   getMaxCommitteeRank,
-  getMaxCommitteeChairRank
+  getMaxCommitteeChairRank,
+  getReps
 }

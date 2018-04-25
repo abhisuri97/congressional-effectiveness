@@ -66,6 +66,28 @@ router.get('/representatives/:member_id', function(req, res, next) {
   })
 })
 
+router.post('/representatives/:member_id/follow', function (req, res, next) {
+  if (!req.session.username) {
+    return res.redirect('back');
+  }
+  console.log('Follow the representative ' + req.params['member_id'])
+  userdb.followRepresentative(req.session.username, req.params['member_id'], function(err) {
+    if (err) console.log('Error following representative:' + err)
+    res.redirect('back');
+  })
+})
+
+router.post('/representatives/:member_id/unfollow', function (req, res, next) {
+  if (!req.session.username) {
+    return res.redirect('back');
+  }
+  console.log('Unfollow the representative ' + req.params['member_id'])
+  userdb.unfollowRepresentative(req.session.username, req.params['member_id'], function(err) {
+    if (err) console.log('Error unfollowing representative:' + err)
+    res.redirect('back');
+  })
+})
+
 router.get('/bills', function(req, res, next) {
   queries.getAllBills().then((bills) => {
     res.render('index', {
@@ -158,18 +180,24 @@ router.post('/signup', function(req, res, next) {
   })
 })
 
-router.post('/logout', function(req, res, next) {
+router.post('/logout', function (req, res, next) {
   req.session.destroy()
   res.redirect('/')
 })
 
-router.get('/profile', function(req, res, next) {
+router.get('/profile', function (req, res, next) {
   if (!req.session.username) {
     return res.redirect('/')
   }
-  res.render('index', {
-    tab: 'profile',
-    username: req.session.username
+  userdb.getFollowing(username, function (err, memberIds) {
+    console.log(memberIds)
+    queries.getReps(memberIds).then((resp) => {
+      res.render('index', {
+        tab: 'profile',
+        username: req.session.username,
+        following: resp
+      })
+    })
   })
 })
 

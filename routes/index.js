@@ -31,7 +31,7 @@ router.get('/representatives/:member_id', function(req, res, next) {
   //})
   var maxCommittee;
   var maxCC;
-  queries.getMaxCommitteeRank().then((max) => maxCommittee=max).then(() => { 
+  queries.getMaxCommitteeRank().then((max) => maxCommittee=max).then(() => {
     return queries.getMaxCommitteeChairRank()
   }).then((r) => {
     maxCC = r;
@@ -161,6 +161,16 @@ router.post('/signup', function(req, res, next) {
 router.post('/logout', function(req, res, next) {
   req.session.destroy()
   res.redirect('/')
+})
+
+router.get('/profile', function(req, res, next) {
+  if (!req.session.username) {
+    return res.redirect('/')
+  }
+  res.render('index', {
+    tab: 'profile',
+    username: req.session.username
+  })
 })
 
 module.exports = router

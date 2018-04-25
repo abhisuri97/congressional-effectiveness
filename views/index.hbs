@@ -6,14 +6,21 @@
       <div class="navbar-menu">
         <div class="navbar-end">
           <div class="navbar-item">
-            {{#if username}}
-            <form method="post" action="/logout">
-              <button class="button is-link is-inverted" type="submit">
-                Logout
-              </button>
-            </form>
-            {{else}}
-              <div class="field is-grouped">
+            <div class="field is-grouped">
+              {{#if username}}
+                <p class="control">
+                  <a class="button is-link is-inverted" href="/profile">
+                    Profile
+                  </a>
+                </p>
+                <p class="control">
+                  <form method="post" action="/logout">
+                    <button class="button is-link is-inverted" type="submit">
+                      Logout
+                    </button>
+                  </form>
+                </p>
+              {{else}}
                 <p class="control">
                   <a class="button is-link is-inverted" href="/login">
                     Login
@@ -24,8 +31,8 @@
                     Sign up
                   </a>
                 </p>
-              </div>
-            {{/if}}
+              {{/if}}
+            </div>
           </div>
         </div>
       </div>
@@ -74,6 +81,9 @@
     {{/ifEquals}}
     {{#ifEquals tab 'committees'}}
     {{> committees_table}}
+    {{/ifEquals}}
+    {{#ifEquals tab 'profile'}}
+    {{> user_profile}}
     {{/ifEquals}}
   </div>
  </section>

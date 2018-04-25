@@ -17,6 +17,20 @@ hbs.registerHelper("ifv", function(conditional, options) {
   }
 });
 
+hbs.registerHelper('getGrade', function(a) {
+  if (a >= 2.7) { return 'A+' }
+  if (a >= 2.4) { return 'A' }
+  if (a >= 2.1) { return 'A-' }
+  if (a >= 1.8) return 'B+'
+  if (a  >= 1.5) return 'B'
+  if (a  >= 1.2) return 'B-'
+  if (a >= 0.9) return 'C+'
+  if (a >= 0.6) return 'C'
+  if (a >= 0.5) return 'C'
+  if (a >= 0.4) return 'D'
+  else return 'F'
+})
+
 // mongoose connection call
 mongoose.connect(config.database)
   .catch((err) => {

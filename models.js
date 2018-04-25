@@ -10,6 +10,7 @@ const sequelize = new Sequelize(type.db, type.username, type.password, {
     acquire: 30000,
   },
   operatorsAliases: false,
+  logging: type.logging
 });
 
 var Representative = sequelize.define('Representative', {
@@ -22,6 +23,7 @@ var Representative = sequelize.define('Representative', {
   last_term_start: { type: Sequelize.STRING },
   last_term_end: { type: Sequelize.STRING },
   last_url: { type: Sequelize.TEXT  },
+  grade: { type: Sequelize.FLOAT },
   image: { type: Sequelize.TEXT }
 }, {
   hooks: {

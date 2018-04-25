@@ -18,7 +18,7 @@
     <td>{{rep.state}}</td>
     <td>{{rep.last_term_start}} to {{ rep.last_term_end }}</td>
     <td>{{#each rep.Congresses as |c|}}{{ c.number}}{{#unless @last}},{{/unless}}{{/each}}</td>
-    <td></td>
+    <td>{{getGrade rep.grade}}</td>
   </tr>
 {{/each}}
 </tbody>

@@ -7,8 +7,12 @@ const Members_of_congress = models.Members_of_congress;
 const Committee = models.Committee;
 const Member_of_committee = models.Member_of_committee;
 const Bill = models.Bill;
+const queries = require('./queries')
 const Voting = models.Voting;
 const s = models.sequelize;
+let maxCommittee;
+let maxCC;
+let alignRank;
 
 Bill.findAll({
   attributes: ['sponsor_id', 'congress', [s.fn('count', s.col('sponsor_id')), 'cnt']],
@@ -222,4 +226,38 @@ Bill.findAll({
   return Promise.all(cw);
 }).then((res) => {
   console.log(JSON.stringify(res, null, 2))
+}).then(()  => {
+  return queries.getMaxCommitteeRank()
+}).then((max) => maxCommittee=max)
+.then(() => { 
+  return queries.getMaxCommitteeChairRank()
+}).then((r) => {
+  maxCC = r;
+})
+.then(() => {
+  return Representative.findAll()
+}).then((reps) => {
+  var calc = reps.map((r) => {
+    return queries.getAllInfo(r.member_id).then((info) => {
+      committeeRank  = info.Member.filter((x) => { return x.number == 115 })[0].Members_of_congress.committee_rank
+      committeeChairRank =info.Member.filter((x) => { return x.number == 115 })[0].Members_of_congress.committee_chair_rank
+      committeeChairRank = (committeeChairRank ? committeeChairRank : maxCC) 
+      committeeRank = (committeeRank ? committeeRank : maxCommittee) 
+      alignRank =info.Member.map((x) => (x.Members_of_congress.align_rank)? `${x.Members_of_congress.align_rank}/537` : '537/537')
+      alignRankC = alignRank.reduce(function(p,c,i,a){return p + (eval(c)/a.length)},0)
+      console.log(alignRankC)
+      missRank =info.Member.map((x) =>  (x.Members_of_congress.miss_rank) ? `${x.Members_of_congress.miss_rank}/537` : '537/537')
+      missRankC = missRank.reduce(function(p,c,i,a){return p + (eval(c)/a.length)},0)
+      billRank = info.Member.map((x) => (x.Members_of_congress.bill_rank) ? `${x.Members_of_congress.bill_rank}/537` : '537/537')
+      billRankC = billRank.reduce(function(p,c,i,a){return p + (eval(c)/a.length)},0)
+      billPassRank = info.Member.map((x) => (x.Members_of_congress.bill_pass_rank) ? `${x.Members_of_congress.bill_pass_rank}/537` : '537/537')
+      billPassRankC = billPassRank.reduce(function(p,c,i,a){return p + (eval(c)/a.length)},0)
+      var  overall = eval(committeeRank + '/' + maxCommittee) + eval(committeeChairRank + '/' + maxCC) + eval(alignRankC) + eval(missRankC) + eval(billRankC) + eval(billPassRankC)
+      console.log(overall/6)
+      var overallA = ((1-(overall/6)) * 4)
+      info.grade = overallA;
+      return info.save()
+    })
+  })
+  return Promise.all(calc)
 })

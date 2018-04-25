@@ -16,6 +16,19 @@ router.get('/representatives', function(req, res, next) {
   })
 })
 
+const getGrade = (a) => {
+  if (a >= 2.7) { return 'A+' }
+  if (a >= 2.4) { return 'A' }
+  if (a >= 2.1) { return 'A-' }
+  if (a >= 1.8) return 'B+'
+  if (a  >= 1.5) return 'B'
+  if (a  >= 1.2) return 'B-'
+  if (a >= 0.9) return 'C+'
+  if (a >= 0.6) return 'C'
+  if (a >= 0.5) return 'C'
+  if (a >= 0.4) return 'D'
+  else return 'F'
+}
 router.get('/representatives/:member_id', function(req, res, next) {
   //var bills;
   //var votes;
@@ -28,6 +41,7 @@ router.get('/representatives/:member_id', function(req, res, next) {
   //})
   var maxCommittee;
   var maxCC;
+  var alignRank;
   queries.getMaxCommitteeRank().then((max) => maxCommittee=max).then(() => { 
     return queries.getMaxCommitteeChairRank()
   }).then((r) => {
@@ -37,6 +51,21 @@ router.get('/representatives/:member_id', function(req, res, next) {
   }).then((info) => {
     committeeRank  = info.Member.filter((x) => { return x.number == 115 })[0].Members_of_congress.committee_rank
     committeeChairRank =info.Member.filter((x) => { return x.number == 115 })[0].Members_of_congress.committee_chair_rank
+    committeeChairRank = (committeeChairRank ? committeeChairRank : maxCC) 
+    committeeRank = (committeeRank ? committeeRank : maxCommittee) 
+    alignRank =info.Member.map((x) => (x.Members_of_congress.align_rank)? `${x.Members_of_congress.align_rank}/537` : '537/537')
+    alignRankC = alignRank.reduce(function(p,c,i,a){return p + (eval(c)/a.length)},0)
+    console.log(alignRankC)
+    missRank =info.Member.map((x) =>  (x.Members_of_congress.miss_rank) ? `${x.Members_of_congress.miss_rank}/537` : '537/537')
+    missRankC = missRank.reduce(function(p,c,i,a){return p + (eval(c)/a.length)},0)
+    billRank = info.Member.map((x) => (x.Members_of_congress.bill_rank) ? `${x.Members_of_congress.bill_rank}/537` : '537/537')
+    billRankC = billRank.reduce(function(p,c,i,a){return p + (eval(c)/a.length)},0)
+    billPassRank = info.Member.map((x) => (x.Members_of_congress.bill_pass_rank) ? `${x.Members_of_congress.bill_pass_rank}/537` : '537/537')
+    billPassRankC = billPassRank.reduce(function(p,c,i,a){return p + (eval(c)/a.length)},0)
+    var  overall = eval(committeeRank + '/' + maxCommittee) + eval(committeeChairRank + '/' + maxCC) + eval(alignRankC) + eval(missRankC) + eval(billRankC) + eval(billPassRankC)
+    console.log(overall/6)
+    console.log((1-(overall/6)) * 4)
+    overallA = getGrade((1-(overall/6)) * 4)
     var infoObj = {
       name: `${info.first_name} ${info.middle_name} ${info.last_name}`,
       party: (info.party == 'R') ? 'Republican' : ((info.party == 'D') ? 'Democrat' : `Other  (${info.party})`),
@@ -45,14 +74,18 @@ router.get('/representatives/:member_id', function(req, res, next) {
       state: info.state,
       url: info.last_url,
       image: info.image,
-      pct: info.Congresses.map((x) => { return `${x.Voting.votes_with_party_pct}% (${x.number}th congress)`}),
-      missed: info.Congresses.map((x) => { return `${x.Voting.missed_votes} (${x.number}th congress)`}),
-      total: info.Congresses.map((x) => { return `${x.Voting.total_votes} (${x.number}th congress}`}),
+      pct: info.Congresses.map((x, idx) => { return `${x.Voting.votes_with_party_pct}% (${x.number}th congress. Rank is ${alignRank[idx]})`}),
+      missed: info.Congresses.map((x, idx) => { return `${x.Voting.missed_votes} (${x.number}th congress. Rank is ${missRank[idx]})  `}),
+      total: info.Congresses.map((x, idx) => { return `${x.Voting.total_votes} (${x.number}th congress)`}),
       billCount: info.Bills.length,
       bills: info.Bills,
       committees: info.CommitteeMember,
       committeeRank:  (committeeRank ? committeeRank : maxCommittee) + '/' + maxCommittee,
-      committeeChairRank: (committeeChairRank ? committeeChairRank : maxCC) + '/' + maxCC
+      committeeChairRank: (committeeChairRank ? committeeChairRank : maxCC) + '/' + maxCC,
+      alignRank: alignRank,
+      missRank: missRank,
+      billRank: `(Bill ranking is ${billRank})`,
+      overallA:  overallA
     }
     res.render('index', {
       tab: 'representatives',

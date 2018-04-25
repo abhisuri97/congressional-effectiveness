@@ -1,5 +1,10 @@
 <table class="table is-fullwidth is-striped">
-
+<div class="field">
+  <label class="label">Name</label>
+  <div class="control">
+    <input class="input" type="text" placeholder="Text input">
+  </div>
+</div>
 <thead>
   <tr>
     <th>Representative Name</th>
@@ -24,3 +29,18 @@
 </tbody>
 
 </table>
+
+<script>
+  $(document).ready(function() {
+    $('input').on('keyup', function() {
+      var text = $('input').val().toLowerCase();
+      $('tbody').find('tr').each(function() {
+        if(!$(this).text().toLowerCase().includes(text)) {
+          $(this).hide()
+        } else {
+          $(this).show();
+        }
+      })
+    })
+  })
+</script>

@@ -1,5 +1,5 @@
 module.exports =  {
-  'database': 'mongodb://localhost:27017/450proj',
+  'database': (process.env.MONGODB_URI || 'mongodb://localhost:27017/450proj'),
   'development': {
     'db': 'cis450_project',
     'username': 'cis450project',
@@ -8,11 +8,11 @@ module.exports =  {
     'logging': false,
   },
   'production': {
-    'db': 'cis450_project',
-    'username': 'cis450',
-    'password':  'cis450550',
-    'host': 'cis450test.cnlmnmamuogs.us-east-1.rds.amazonaws.com',
+    'db': 'congressdb',
+    'username': 'congress',
+    'password':  'congress2018',
+    'host': 'congressional-effectiveness.cnlmnmamuogs.us-east-1.rds.amazonaws.com',
     'logging': true
   },
-  'type': 'development'
+  'type': 'production'
 }

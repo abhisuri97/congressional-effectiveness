@@ -10,7 +10,7 @@ const sequelize = new Sequelize(type.db, type.username, type.password, {
     acquire: 30000,
   },
   operatorsAliases: false,
-  logging: type.logging
+  logging: console.log
 });
 
 var Representative = sequelize.define('Representative', {
@@ -69,6 +69,14 @@ var Members_of_congress = sequelize.define('Members_of_congress', {
   committee_rank: { type: Sequelize.INTEGER },
   committee_chair_rank: { type: Sequelize.INTEGER },
   title: { type: Sequelize.STRING }
+}, {
+  indexes: [
+    { 
+      name: 'member_idx',
+      fields: [ 'member_id', { attribute: 'member_id', collate: 'en_US', length: 5}],
+      using: 'BTREE'
+    }
+  ]
 })
 
 Representative.belongsToMany(Congress, { through: Members_of_congress, foreignKey: 'member_id', as: 'Member' })

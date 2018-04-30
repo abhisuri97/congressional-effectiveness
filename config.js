@@ -14,5 +14,5 @@ module.exports =  {
     'host': 'congressional-effectiveness.cnlmnmamuogs.us-east-1.rds.amazonaws.com',
     'logging': true
   },
-  'type': 'development'
+  'type': 'production'
 }

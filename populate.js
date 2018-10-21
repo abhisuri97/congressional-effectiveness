@@ -1,4 +1,4 @@
-const models = require('./models.js');
+const models = require('./models');
 const Representative = models.Representative;
 const Congress = models.Congress;
 const Members_of_congress = models.Members_of_congress;

@@ -1,4 +1,4 @@
-const models = require('./models.js');
+const models = require('./models');
 const Sequelize = require('sequelize')
 const Op = Sequelize.Op;
 const Representative = models.Representative;
@@ -13,13 +13,22 @@ const s = models.sequelize;
 let maxCommittee;
 let maxCC;
 let alignRank;
+let sessions = {};
+let committeeSession = 115;
 
-Bill.findAll({
-  attributes: ['sponsor_id', 'congress', [s.fn('count', s.col('sponsor_id')), 'cnt']],
-  group: ['sponsor_id', 'congress'],
-  order: [[s.literal('cnt'), 'DESC']]
+
+
+Congress.findAll().then((x) => {
+  x.forEach(i => sessions[i.number] = []);
+  return;
+}).then(() => {
+  return Bill.findAll({
+    attributes: ['sponsor_id', 'congress', [s.fn('count', s.col('sponsor_id')), 'cnt']],
+    group: ['sponsor_id', 'congress'],
+    order: [[s.literal('cnt'), 'DESC']]
+  })
 }).then((g) => {
-  var rr = {'113':  [], '114': [], '115': []}
+  var rr = Object.assign({}, sessions);
   g.forEach((t) => {
     rr[t.congress].push(t)
   })
@@ -58,7 +67,7 @@ Bill.findAll({
     order: [[s.literal('cnt'), 'DESC']]
   })
 }).then((g) => {
-  var rr = {'113':  [], '114': [], '115': []}
+  var rr = Object.assign({}, sessions);
   g.forEach((t) => {
     rr[t.congress].push(t)
   })
@@ -94,7 +103,7 @@ Bill.findAll({
     order: [s.literal('missed_votes')]
   })
 }).then((g) => {
-  var rr = {'113':  [], '114': [], '115': []}
+  var rr = Object.assign({}, sessions);
   g.forEach((t) => {
     rr[t.congress_number_chamber.split('_')[0]].push(t)
   })
@@ -130,7 +139,7 @@ Bill.findAll({
     order: [s.literal('votes_with_party_pct')]
   })
 }).then((g) => {
-  var rr = {'113':  [], '114': [], '115': []}
+  var rr = Object.assign({}, sessions);
   g.forEach((t) => {
     rr[t.congress_number_chamber.split('_')[0]].push(t)
   })
@@ -178,7 +187,7 @@ Bill.findAll({
       }).then((rep) => {
         //console.log(JSON.stringify(rep, null, 2))
         return rep.Member.map((csess, cid) => {
-          if (csess.number == 115) {
+          if (csess.number == commiteeSession) {
             var id = rep.Member[cid].Members_of_congress.id;
             return Members_of_congress.findOne({ where: { id: id }}).then((moc) => {
               moc.committee_rank = idt + 1;
@@ -211,7 +220,7 @@ Bill.findAll({
       }).then((rep) => {
         //console.log(JSON.stringify(rep, null, 2))
         return rep.Member.map((csess, cid) => {
-          if (csess.number == 115) {
+          if (csess.number == committeeSession) {
             var id = rep.Member[cid].Members_of_congress.id;
             return Members_of_congress.findOne({ where: { id: id }}).then((moc) => {
               moc.committee_chair_rank = idt + 1;
@@ -239,8 +248,8 @@ Bill.findAll({
 }).then((reps) => {
   var calc = reps.map((r) => {
     return queries.getAllInfo(r.member_id).then((info) => {
-      committeeRank  = info.Member.filter((x) => { return x.number == 115 })[0].Members_of_congress.committee_rank
-      committeeChairRank =info.Member.filter((x) => { return x.number == 115 })[0].Members_of_congress.committee_chair_rank
+      committeeRank  = info.Member.filter((x) => { return x.number == committeeSession })[0].Members_of_congress.committee_rank
+      committeeChairRank =info.Member.filter((x) => { return x.number == committeeSession })[0].Members_of_congress.committee_chair_rank
       committeeChairRank = (committeeChairRank ? committeeChairRank : maxCC) 
       committeeRank = (committeeRank ? committeeRank : maxCommittee) 
       alignRank =info.Member.map((x) => (x.Members_of_congress.align_rank)? `${x.Members_of_congress.align_rank}/537` : '537/537')

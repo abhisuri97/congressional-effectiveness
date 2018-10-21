@@ -7,7 +7,7 @@ const hbs = require('hbs');
 
 const config = require('../config.js');
 const index = require('../routes/index');
-const datadb = require('../models.js');
+const datadb = require('../models');
 
 hbs.registerHelper("ifv", function(conditional, options) {
   if (options.hash.desired === options.hash.type) {
@@ -43,7 +43,7 @@ mongoose.Promise = global.Promise
 
 const app = express()
 app.set('secret', config.secret);
-
+app.use('/static', express.static(path.join(__dirname, '..', 'static')));
 // bodyparser middleware JIC
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
